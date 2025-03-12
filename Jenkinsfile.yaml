@@ -21,15 +21,3 @@ pipeline:
     - stage: "Cleanup"
       steps:
         - sh "rm -rf fun-fact-app"
-
-  post:
-    success:
-      steps:
-        - sh "echo 'Pipeline executed successfully!'"
-    failure:
-      steps:
-        - sh "echo 'Pipeline failed. Check logs for errors.'"
-    always:
-      steps:
-        - sh "echo 'Pipeline execution completed.'"
-
