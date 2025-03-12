@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'docker:latest'  // Use an image that has Docker CLI
+            args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     environment {
         IMAGE_NAME = "fun-fact-app"
@@ -9,14 +14,14 @@ pipeline {
     stages {
         stage("Clone Repository") {
             steps {
-                sh "rm -rf fun-fact-app && git clone https://github.com/Karthikeyan-Karunakaran/fun-fact-app.git"
+                git branch: 'main', url: 'https://github.com/Karthikeyan-Karunakaran/fun-fact-app.git'
             }
         }
 
         stage("Build Docker Image") {
             steps {
                 script {
-                    def dockerImage = docker.build(IMAGE_NAME)
+                    def dockerImage = docker.build("${IMAGE_NAME}")
                 }
             }
         }
@@ -24,14 +29,17 @@ pipeline {
         stage("Run Docker Container") {
             steps {
                 script {
-                    def container = docker.image(IMAGE_NAME).run("--name ${CONTAINER_NAME} -p 8090:8080 -d")
+                    def container = docker.image(IMAGE_NAME).run("-p 8090:8080 -d --name ${CONTAINER_NAME}")
                 }
             }
         }
 
         stage("Cleanup") {
             steps {
-                sh "rm -rf fun-fact-app"
+                script {
+                    docker.image(IMAGE_NAME).stop()
+                    docker.image(IMAGE_NAME).remove()
+                }
             }
         }
     }
