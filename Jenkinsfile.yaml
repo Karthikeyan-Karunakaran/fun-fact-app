@@ -32,20 +32,9 @@
 #             echo 'Deployment successful! App is running at
 #             http://localhost:8090
 pipeline:
-  agent: any
-
+  agent:
+    any
   stages:
-    stage: "Test Stage"
+    - stage: "Hello World"
       steps:
-        - script:
-            - echo "stage test"
-
-  post:
-    always:
-      steps:
-        - script:
-            - echo "Test"
-    changed:
-      steps:
-        - script:
-            - echo "Test"
+        - script: "echo 'Hello, World!'"
