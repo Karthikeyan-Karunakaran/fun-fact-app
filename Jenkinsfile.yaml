@@ -33,7 +33,7 @@
 #             http://localhost:8090
 pipeline:
   agent:
-    any:
+    any
   stages:
     stage:
       steps:
