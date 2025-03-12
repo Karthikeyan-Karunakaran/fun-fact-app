@@ -11,13 +11,20 @@ pipeline:
 
     - stage: "Build Docker Image"
       steps:
-        - sh "cd fun-fact-app && docker build -t $IMAGE_NAME ."
-
+        - script:
+            | 
+            def dockerImage = docker.build("$IMAGE_NAME")
+  
     - stage: "Run Docker Container"
       steps:
-        - sh "docker stop $CONTAINER_NAME || true && docker rm $CONTAINER_NAME || true"
-        - sh "docker run -d --name $CONTAINER_NAME $IMAGE_NAME"
+        - script:
+            | 
+            def container = docker.image("$IMAGE_NAME").run("--name $CONTAINER_NAME -d")
 
     - stage: "Cleanup"
       steps:
-        - sh "rm -rf fun-fact-app"
+        - script:
+            | 
+            docker.image("$IMAGE_NAME").stop()
+            docker.image("$IMAGE_NAME").remove()
+            sh "rm -rf fun-fact-app"
