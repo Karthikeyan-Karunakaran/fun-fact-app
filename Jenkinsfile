@@ -31,10 +31,6 @@ pipeline {
 
         stage("Cleanup") {
             steps {
-                script {
-                    sh "docker stop ${CONTAINER_NAME} || true"
-                    sh "docker rm ${CONTAINER_NAME} || true"
-                }
                 sh "rm -rf fun-fact-app"
             }
         }
