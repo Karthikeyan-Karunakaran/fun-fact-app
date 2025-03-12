@@ -35,7 +35,7 @@ pipeline:
   agent: any
 
   stages:
-    - stage: "Test Stage"
+    stage: "Test Stage"
       steps:
         - script:
             - echo "stage test"
