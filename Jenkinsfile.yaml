@@ -1,5 +1,5 @@
 pipeline:
-  agent any
+  agent: any
 
   environment:
     IMAGE_NAME: "fun-fact-app"
@@ -11,26 +11,28 @@ pipeline:
       steps:
         - script: |
             rm -rf fun-fact-app
-            git clone $GITHUB_REPO
+            git clone ${GITHUB_REPO}
 
     - stage: Build Docker Image
       steps:
         - script: |
             cd fun-fact-app
-            docker build -t $IMAGE_NAME .
+            docker build -t ${IMAGE_NAME} .
 
     - stage: Deploy Container
       steps:
         - script: |
-            docker stop $CONTAINER_NAME || true
-            docker rm $CONTAINER_NAME || true
-            docker run -d -p 8080:8080 --name $CONTAINER_NAME $IMAGE_NAME
+            docker stop ${CONTAINER_NAME} || true
+            docker rm ${CONTAINER_NAME} || true
+            docker run -d -p 8080:8080 --name ${CONTAINER_NAME} ${IMAGE_NAME}
 
     - stage: Cleanup
       steps:
-        - script: docker system prune -f
+        - script: |
+            docker system prune -f
 
   post:
     success:
-      echo "Deployment successful! App is running at http://<server-ip>:8080"
-
+      steps:
+        - script: |
+            echo "Deployment successful! App is running at http://<server-ip>:8080"
