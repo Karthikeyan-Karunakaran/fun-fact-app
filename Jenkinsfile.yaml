@@ -7,24 +7,29 @@ pipeline:
     GITHUB_REPO: "https://github.com/Karthikeyan-Karunakaran/fun-fact-app.git"
 
   stages:
-    - stage: Clone Repository
+    - stage: "Clone Repository"
       steps:
-        - script: "rm -rf fun-fact-app && git clone ${GITHUB_REPO}"
+        - script:
+            - sh: "rm -rf fun-fact-app && git clone $GITHUB_REPO"
 
-    - stage: Build Docker Image
+    - stage: "Build Docker Image"
       steps:
-        - script: "cd fun-fact-app && docker build -t ${IMAGE_NAME} ."
+        - script:
+            - sh: "cd fun-fact-app && docker build -t $IMAGE_NAME ."
 
-    - stage: Deploy Container
+    - stage: "Deploy Container"
       steps:
-        - script: "docker stop ${CONTAINER_NAME} || true && docker rm ${CONTAINER_NAME} || true"
-        - script: "docker run -d -p 8090:8080 --name ${CONTAINER_NAME} ${IMAGE_NAME}"
+        - script:
+            - sh: "docker stop $CONTAINER_NAME || true && docker rm $CONTAINER_NAME || true"
+            - sh: "docker run -d -p 8090:8080 --name $CONTAINER_NAME $IMAGE_NAME"
 
-    - stage: Cleanup
+    - stage: "Cleanup"
       steps:
-        - script: "docker system prune -f"
+        - script:
+            - sh: "docker system prune -f"
 
   post:
     success:
       steps:
-        - script: "echo 'Deployment successful! App is running at http://localhost:8090'"
+        - script:
+            - sh: "echo 'Deployment successful! App is running at http://localhost:8090'"
