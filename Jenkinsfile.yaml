@@ -24,4 +24,4 @@ pipeline:
 
     - stage: "Cleanup"
       steps:
-        - sh "rm -rf fun-fact-app"'
+        - sh "rm -rf fun-fact-app"
