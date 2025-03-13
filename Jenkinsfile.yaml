@@ -4,20 +4,28 @@ pipeline:
   environment:
     IMAGE_NAME: "fun-fact-app"
     CONTAINER_NAME: "fun-fact-container"
+    SSH_USER: "Karthikeyan"
+    SSH_HOST: "192.168.62.216"
+    SSH_KEY: "/home/karthikeyan/.ssh/id_ed25519.pub"
+
   stages:
     - stage: "Clone Repository"
       steps:
-        - sh "rm -rf fun-fact-app && git clone https://github.com/Karthikeyan-Karunakaran/fun-fact-app.git"
+        - sh: |
+            ssh -i $SSH_KEY $SSH_USER@$SSH_HOST 'rm -rf fun-fact-app && git clone https://github.com/Karthikeyan-Karunakaran/fun-fact-app.git'
 
     - stage: "Build Docker Image"
       steps:
-        - sh "cd fun-fact-app && docker build -t $IMAGE_NAME ."
+        - sh: |
+            ssh -i $SSH_KEY $SSH_USER@$SSH_HOST 'cd fun-fact-app && docker build -t $IMAGE_NAME .'
 
     - stage: "Run Docker Container"
       steps:
-        - sh "docker stop $CONTAINER_NAME || true && docker rm $CONTAINER_NAME || true"
-        - sh "docker run -d --name $CONTAINER_NAME -p 8100:8080 $IMAGE_NAME"
+        - sh: |
+            ssh -i $SSH_KEY $SSH_USER@$SSH_HOST 'docker stop $CONTAINER_NAME || true && docker rm $CONTAINER_NAME || true'
+            ssh -i $SSH_KEY $SSH_USER@$SSH_HOST 'docker run -d --name $CONTAINER_NAME -p 8100:8080 $IMAGE_NAME'
 
     - stage: "Cleanup"
       steps:
-        - sh "rm -rf fun-fact-app"
+        - sh: |
+            ssh -i $SSH_KEY $SSH_USER@$SSH_HOST 'rm -rf fun-fact-app'
