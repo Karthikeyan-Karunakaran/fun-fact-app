@@ -4,9 +4,6 @@ pipeline:
   environment:
     IMAGE_NAME: "fun-fact-app"
     CONTAINER_NAME: "fun-fact-container"
-    SSH_USER: "Karthikeyan"
-    SSH_HOST: "192.168.62.216"
-    SSH_KEY: "/var/jenkins/id_ed25519"
 
   stages:
     - stage: "Clone Repository"
